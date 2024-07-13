@@ -8,7 +8,6 @@ use App\Repository\ReservationRepository;
 
 
 #[ApiResource]
-#[ORM\Entity]
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
 {

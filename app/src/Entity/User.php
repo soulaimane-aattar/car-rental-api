@@ -7,7 +7,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use App\Repository\UserRepository;
 
 #[ApiResource]
-#[ORM\Entity]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface
 {

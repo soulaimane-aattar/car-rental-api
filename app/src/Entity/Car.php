@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CarRepository;
 
 #[ApiResource]
-#[ORM\Entity]
 #[ORM\Entity(repositoryClass: CarRepository::class)]
 class Car
 {
