@@ -3,9 +3,11 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CarRepository;
 
 #[ApiResource]
 #[ORM\Entity]
+#[ORM\Entity(repositoryClass: CarRepository::class)]
 class Car
 {
     #[ORM\Id]
@@ -22,7 +24,6 @@ class Car
     #[ORM\Column(type: 'boolean')]
     private $available;
 
-    // Getters and Setters
 
     /**
      * Get the value of available
@@ -102,5 +103,10 @@ class Car
         $this->id = $id;
 
         return $this;
+    }
+
+    public function isAvailable(): ?bool
+    {
+        return $this->available;
     }
 }
