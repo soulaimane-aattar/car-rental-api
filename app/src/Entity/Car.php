@@ -3,10 +3,13 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\CarRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource]
-#[ORM\Entity(repositoryClass: CarRepository::class)]
+#[ApiResource(
+    normalizationContext: ['groups' => ['car:read']],
+    denormalizationContext: ['groups' => ['car:write']]
+)]
+#[ORM\Entity]
 class Car
 {
     #[ORM\Id]
@@ -14,98 +17,56 @@ class Car
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $model;
-
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string')]
+    #[Groups(['car:read', 'car:write'])]
     private $make;
 
-    #[ORM\Column(type: 'boolean')]
-    private $available;
+    #[ORM\Column(type: 'string')]
+    #[Groups(['car:read', 'car:write'])]
+    private $model;
 
+    #[ORM\Column(type: 'string')]
+    #[Groups(['car:read', 'car:write'])]
+    private $year;
 
-    /**
-     * Get the value of available
-     */ 
-    public function getAvailable()
+    public function getId(): ?int
     {
-        return $this->available;
+        return $this->id;
     }
 
-    /**
-     * Set the value of available
-     *
-     * @return  self
-     */ 
-    public function setAvailable($available)
-    {
-        $this->available = $available;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of make
-     */ 
-    public function getMake()
+    public function getMake(): ?string
     {
         return $this->make;
     }
 
-    /**
-     * Set the value of make
-     *
-     * @return  self
-     */ 
-    public function setMake($make)
+    public function setMake(string $make): self
     {
         $this->make = $make;
 
         return $this;
     }
 
-    /**
-     * Get the value of model
-     */ 
-    public function getModel()
+    public function getModel(): ?string
     {
         return $this->model;
     }
 
-    /**
-     * Set the value of model
-     *
-     * @return  self
-     */ 
-    public function setModel($model)
+    public function setModel(string $model): self
     {
         $this->model = $model;
 
         return $this;
     }
 
-    /**
-     * Get the value of id
-     */ 
-    public function getId()
+    public function getYear(): ?string
     {
-        return $this->id;
+        return $this->year;
     }
 
-    /**
-     * Set the value of id
-     *
-     * @return  self
-     */ 
-    public function setId($id)
+    public function setYear(string $year): self
     {
-        $this->id = $id;
+        $this->year = $year;
 
         return $this;
-    }
-
-    public function isAvailable(): ?bool
-    {
-        return $this->available;
     }
 }

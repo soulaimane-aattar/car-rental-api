@@ -1,14 +1,16 @@
-<?php
+<?php 
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\ReservationRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
-
-#[ApiResource]
-#[ORM\Entity(repositoryClass: ReservationRepository::class)]
+#[ApiResource(
+    normalizationContext: ['groups' => ['reservation:read']],
+    denormalizationContext: ['groups' => ['reservation:write']]
+)]
+#[ORM\Entity]
 class Reservation
 {
     #[ORM\Id]
@@ -16,118 +18,58 @@ class Reservation
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[ORM\ManyToOne(targetEntity: Car::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['reservation:read', 'reservation:write'])]
+    private $car;
+
     #[ORM\Column(type: 'datetime')]
+    #[Assert\NotBlank]
+    #[Groups(['reservation:read', 'reservation:write'])]
     private $startDate;
 
     #[ORM\Column(type: 'datetime')]
+    #[Assert\NotBlank]
+    #[Groups(['reservation:read', 'reservation:write'])]
     private $endDate;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private $user;
-
-    #[ORM\ManyToOne(targetEntity: Car::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private $car;
-
-    // Getters and Setters
-
-    /**
-     * Get the value of user
-     */ 
-    public function getUser()
+    public function getId(): ?int
     {
-        return $this->user;
+        return $this->id;
     }
 
-    /**
-     * Set the value of user
-     *
-     * @return  self
-     */ 
-    public function setUser($user)
+    public function getCar(): ?Car
     {
-        $this->user = $user;
+        return $this->car;
+    }
+
+    public function setCar(Car $car): self
+    {
+        $this->car = $car;
 
         return $this;
     }
 
-    /**
-     * Get the value of endDate
-     */ 
-    public function getEndDate()
-    {
-        return $this->endDate;
-    }
-
-    /**
-     * Set the value of endDate
-     *
-     * @return  self
-     */ 
-    public function setEndDate($endDate)
-    {
-        $this->endDate = $endDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of startDate
-     */ 
-    public function getStartDate()
+    public function getStartDate(): ?\DateTimeInterface
     {
         return $this->startDate;
     }
 
-    /**
-     * Set the value of startDate
-     *
-     * @return  self
-     */ 
-    public function setStartDate($startDate)
+    public function setStartDate(\DateTimeInterface $startDate): self
     {
         $this->startDate = $startDate;
 
         return $this;
     }
 
-    /**
-     * Get the value of id
-     */ 
-    public function getId()
+    public function getEndDate(): ?\DateTimeInterface
     {
-        return $this->id;
+        return $this->endDate;
     }
 
-    /**
-     * Set the value of id
-     *
-     * @return  self
-     */ 
-    public function setId($id)
+    public function setEndDate(\DateTimeInterface $endDate): self
     {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of car
-     */ 
-    public function getCar()
-    {
-        return $this->car;
-    }
-
-    /**
-     * Set the value of car
-     *
-     * @return  self
-     */ 
-    public function setCar($car)
-    {
-        $this->car = $car;
+        $this->endDate = $endDate;
 
         return $this;
     }
